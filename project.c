@@ -1,262 +1,126 @@
-#include <stdio.h>
-#include <math.h>
-#include <stdlib.h>
-#include <conio.h>
-#define M_PI 3.14
-#define M_E 2.71828
-void add(double x, double y)
-{
-    printf("Result: %.2f\n", x + y);
-}
+# Intelligent Library Assistant - Python OOP Project
 
-void subtract(double x, double y)
-{
-    printf("Result: %.2f\n", x - y);
-}
+class Book:
+    def __init__(self, book_id, title, author, category):
+        self.book_id = book_id
+        self.title = title
+        self.author = author
+        self.category = category
+        self.is_available = True
 
-void multiply(double x, double y)
-{
-    printf("Result: %.2f\n", x * y);
-}
+    def display(self):
+        status = "Available" if self.is_available else "Issued"
+        print(f"{self.book_id} | {self.title} | {self.author} | {self.category} | {status}")
 
-void divide(double x, double y)
-{
-    if (y == 0)
-    {
-        printf("Error: Division by zero.\n");
-    }
-    else
-    {
-        printf("Result: %.2f\n", x / y);
-    }
-}
 
-void power(double x, double y)
-{
-    printf("Result: %.2f\n", pow(x, y));
-}
+class Library:
+    def __init__(self):
+        self.books = []
 
-void squareRoot(double x)
-{
-    if (x < 0)
-    {
-        printf("Error: Negative number.\n");
-    }
-    else
-    {
-        printf("Result: %.2f\n", sqrt(x));
-    }
-}
+    # Add a new book
+    def add_book(self):
+        book_id = input("Enter Book ID: ")
+        title = input("Enter Title: ")
+        author = input("Enter Author: ")
+        category = input("Enter Category: ")
 
-void factorial(int x)
-{
-    if (x < 0)
-    {
-        printf("Error: Negative number.\n");
-    }
-    else
-    {
-        int result = 1;
-        for (int i = 1; i <= x; i++)
-        {
-            result *= i;
-        }
-        printf("Result: %d\n", result);
-    }
-}
+        new_book = Book(book_id, title, author, category)
+        self.books.append(new_book)
+        print("Book added successfully!")
 
-void logarithm(double x, double base)
-{
-    if (x <= 0)
-    {
-        printf("Error: Non-positive number.\n");
-    }
-    else
-    {
-        printf("Result: %.2f\n", log(x) / log(base));
-    }
-}
+    # Search book using title or author
+    def search_book(self):
+        key = input("Enter Book Title or Author to search: ").lower()
+        found = False
 
-void sinFunction(double x)
-{
-    printf("Result: %.2f\n", sin(x * M_PI / 180));
-}
+        for book in self.books:
+            if key in book.title.lower() or key in book.author.lower():
+                book.display()
+                found = True
 
-void cosFunction(double x)
-{
-    printf("Result: %.2f\n", cos(x * M_PI / 180));
-}
+        if not found:
+            print("No matching book found.")
 
-void tanFunction(double x)
-{
-    printf("Result: %.2f\n", tan(x * M_PI / 180));
-}
+    # Issue a book
+    def issue_book(self):
+        book_id = input("Enter Book ID to issue: ")
+        for book in self.books:
+            if book.book_id == book_id:
+                if book.is_available:
+                    book.is_available = False
+                    print(f"Book '{book.title}' issued successfully!")
+                else:
+                    print("Book is already issued.")
+                return
+        print("Book not found.")
 
-void displayMenu()
-{
-    printf("\n** Scientific Calculator **\n");
-    printf("1. Arithmetic Operations\n");
-    printf("2. Trigonometric Functions\n");
-    printf("3. Logarithmic Functions\n");
-    printf("4. Power and Square Root\n");
-    printf("5. Factorial\n");
-    printf("0. Exit\n");
-    printf("Select a category: ");
-}
+    # Return a book
+    def return_book(self):
+        book_id = input("Enter Book ID to return: ")
+        for book in self.books:
+            if book.book_id == book_id:
+                if not book.is_available:
+                    book.is_available = True
+                    print(f"Book '{book.title}' returned successfully!")
+                else:
+                    print("This book was not issued.")
+                return
+        print("Book not found.")
 
-void arithmeticMenu()
-{
-    printf("\nArithmetic Operations:\n");
-    printf("1. Addition\n");
-    printf("2. Subtraction\n");
-    printf("3. Multiplication\n");
-    printf("4. Division\n");
-    printf("Select an operation: ");
-}
+    # Show all books
+    def show_books(self):
+        print("\nBookID | Title | Author | Category | Status")
+        print("--------------------------------------------")
+        for book in self.books:
+            book.display()
 
-void trigMenu()
-{
-    printf("\nTrigonometric Functions:\n");
-    printf("1. Sine\n");
-    printf("2. Cosine\n");
-    printf("3. Tangent\n");
-    printf("Select an operation: ");
-}
+    # Simple AI Recommendation based on category
+    def recommend_book(self):
+        fav = input("Enter your favourite category: ").lower()
+        print("\nRecommended Books for you:")
+        found = False
+        for book in self.books:
+            if fav in book.category.lower() and book.is_available:
+                book.display()
+                found = True
+        if not found:
+            print("No recommendations available.")
 
-void logMenu()
-{
-    printf("\nLogarithmic Functions:\n");
-    printf("1. Natural Logarithm (base e)\n");
-    printf("2. Logarithm with Custom Base\n");
-    printf("Select an operation: ");
-}
 
-void powerRootMenu()
-{
-    printf("\nPower and Square Root:\n");
-    printf("1. Power\n");
-    printf("2. Square Root\n");
-    printf("Select an operation: ");
-}
+def main():
+    library = Library()
 
-void main()
-{
-    int choice, subChoice;
-    double x, y, base;
+    while True:
+        print("\n==============================")
+        print(" INTELLIGENT LIBRARY ASSISTANT")
+        print("==============================")
+        print("1. Add Book")
+        print("2. Search Book")
+        print("3. Issue Book")
+        print("4. Return Book")
+        print("5. Show All Books")
+        print("6. Recommend Books")
+        print("7. Exit")
 
-    while (1)
-    {
-        displayMenu();
-        scanf("%d", &choice);
+        choice = input("Enter your choice: ")
 
-        switch (choice)
-        {
-        case 0:
-            printf("Exiting the calculator.\n");
-            exit(0);
+        if choice == "1":
+            library.add_book()
+        elif choice == "2":
+            library.search_book()
+        elif choice == "3":
+            library.issue_book()
+        elif choice == "4":
+            library.return_book()
+        elif choice == "5":
+            library.show_books()
+        elif choice == "6":
+            library.recommend_book()
+        elif choice == "7":
+            print("Thank you for using Intelligent Library Assistant!")
+            break
+        else:
+            print("Invalid choice. Try again.")
 
-        case 1:
-            arithmeticMenu();
-            scanf("%d", &subChoice);
-            printf("Enter two numbers: ");
-            scanf("%lf %lf", &x, &y);
 
-            switch (subChoice)
-            {
-            case 1:
-                add(x, y);
-                break;
-            case 2:
-                subtract(x, y);
-                break;
-            case 3:
-                multiply(x, y);
-                break;
-            case 4:
-                divide(x, y);
-                break;
-            default:
-                printf("Invalid operation.\n");
-                break;
-            }
-            break;
-
-        case 2:
-            trigMenu();
-            scanf("%d", &subChoice);
-            printf("Enter the angle in degrees: ");
-            scanf("%lf", &x);
-
-            switch (subChoice)
-            {
-            case 1:
-                sinFunction(x);
-                break;
-            case 2:
-                cosFunction(x);
-                break;
-            case 3:
-                tanFunction(x);
-                break;
-            default:
-                printf("Invalid operation.\n");
-                break;
-            }
-            break;
-
-        case 3:
-            logMenu();
-            scanf("%d", &subChoice);
-
-            if (subChoice == 1)
-            {
-                printf("Enter the number: ");
-                scanf("%lf", &x);
-                logarithm(x, M_E);
-            }
-            else if (subChoice == 2)
-            {
-                printf("Enter the number and base: ");
-                scanf("%lf %lf", &x, &base);
-                logarithm(x, base);
-            }
-            else
-            {
-                printf("Invalid operation.\n");
-            }
-            break;
-
-        case 4:
-            powerRootMenu();
-            scanf("%d", &subChoice);
-
-            if (subChoice == 1)
-            {
-                printf("Enter the base and exponent: ");
-                scanf("%lf %lf", &x, &y);
-                power(x, y);
-            }
-            else if (subChoice == 2)
-            {
-                printf("Enter the number: ");
-                scanf("%lf", &x);
-                squareRoot(x);
-            }
-            else
-            {
-                printf("Invalid operation.\n");
-            }
-            break;
-
-        case 5:
-            printf("Enter the number for factorial: ");
-            scanf("%lf", &x);
-            factorial((int)x);
-            break;
-
-        default:
-            printf("Invalid choice. Try again.\n");
-        }
-    }
-    getch();
-}
+main()
